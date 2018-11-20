@@ -140,6 +140,33 @@ bool MyApp::OnInit()
 // main frame
 // ----------------------------------------------------------------------------
 
+class TestDialog : public wxDialog
+{
+public:
+    TestDialog(wxWindow* parent) : wxDialog(parent, wxID_ANY, "Test")
+    {
+        wxTextCtrl* tc1 = new wxTextCtrl(this, wxID_ANY, "12345678", wxDefaultPosition, wxDefaultSize, 0);
+        wxTextCtrl* tc2 = new wxTextCtrl(this, wxID_ANY, "ABCDEFGH", wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
+        wxComboBox* cb1 = new wxComboBox(this, wxID_ANY, "12345678", wxDefaultPosition, wxDefaultSize, 0);
+        wxComboBox* cb2 = new wxComboBox(this, wxID_ANY, "12345678", wxDefaultPosition, wxDefaultSize, 0, NULL, wxTE_PROCESS_ENTER);
+        wxButton* btn1 = new wxButton(this, wxID_OK, "OK");
+        btn1->SetDefault();
+        wxButton* btn2 = new wxButton(this, wxID_CANCEL, "Cancel");
+
+        wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+        sizer->Add(tc1, 1, wxEXPAND | wxALL, 10);
+        sizer->Add(tc2, 1, wxEXPAND | wxALL, 10);
+        sizer->Add(cb1, 1, wxEXPAND | wxALL, 10);
+        sizer->Add(cb2, 1, wxEXPAND | wxALL, 10);
+        sizer->Add(btn1, 1, wxEXPAND | wxALL, 10);
+        sizer->Add(btn2, 1, wxEXPAND | wxALL, 10);
+        SetSizerAndFit(sizer);
+    }
+
+    virtual ~TestDialog() {};
+
+};
+
 // frame constructor
 MyFrame::MyFrame(const wxString& title)
        : wxFrame(NULL, wxID_ANY, title)
@@ -177,6 +204,9 @@ MyFrame::MyFrame(const wxString& title)
     CreateStatusBar(2);
     SetStatusText("Welcome to wxWidgets!");
 #endif // wxUSE_STATUSBAR
+
+    TestDialog dlg(this);
+    dlg.ShowModal();
 }
 
 
@@ -190,6 +220,10 @@ void MyFrame::OnQuit(wxCommandEvent& WXUNUSED(event))
 
 void MyFrame::OnAbout(wxCommandEvent& WXUNUSED(event))
 {
+    TestDialog dlg(this);
+    dlg.ShowModal();
+    return;
+
     wxMessageBox(wxString::Format
                  (
                     "Welcome to %s!\n"
