@@ -38,7 +38,7 @@ class WXDLLIMPEXP_CORE wxComboBox :
     virtual void DelegateTextChanged( const wxString& value );
     virtual void DelegateChoice( const wxString& value );
 
-    wxComboBox() { }
+    wxComboBox(); // { }
 
     wxComboBox(wxWindow *parent, wxWindowID id,
            const wxString& value = wxEmptyString,
@@ -131,6 +131,7 @@ protected:
     virtual void EnableTextChangedEvents(bool enable);
 
     // callbacks
+    void OnChar(wxKeyEvent& event); // Process 'enter' if required
     void OnKeyDown(wxKeyEvent& event); // Process clipboard shortcuts
 
     // the subcontrols

@@ -2667,6 +2667,8 @@ bool wxWindowMac::OSXHandleKeyEvent( wxKeyEvent& event )
         handled = HandleWindowEvent( event ) ;
         if ( handled && event.GetSkipped() )
             handled = false ;
+    
+        printf("wxWindowMac::OSXHandleKeyEvent %p handled: %d\n", this, int(handled));
     }
 
     return handled ;

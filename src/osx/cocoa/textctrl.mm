@@ -352,6 +352,7 @@ NSView* wxMacEditHelper::ms_viewCurrentlyEdited = nil;
 - (void) keyDown:(NSEvent*) event
 {
     wxWidgetCocoaImpl* impl = (wxWidgetCocoaImpl* ) wxWidgetImpl::FindFromWXWidget( (WXWidget) [self delegate] );
+    printf("wxNSTextFieldEditor::keyDown %p\n", impl);
     lastKeyDownEvent = event;
     if ( impl == NULL || !impl->DoHandleKeyEvent(event) )
         [super keyDown:event];

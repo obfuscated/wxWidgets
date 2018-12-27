@@ -3644,6 +3644,8 @@ bool wxWidgetCocoaImpl::DoHandleKeyEvent(NSEvent *event)
     wxKeyEvent wxevent(wxEVT_KEY_DOWN);
     SetupKeyEvent( wxevent, event );
 
+    printf("wxWidgetCocoaImpl::DoHandleKeyEvent %p peer: %p\n", this, GetWXPeer());
+
     // Generate wxEVT_CHAR_HOOK before sending any other events but only when
     // the key is pressed, not when it's released (the type of wxevent is
     // changed by SetupKeyEvent() so it can be wxEVT_KEY_UP too by now).

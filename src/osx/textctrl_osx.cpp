@@ -375,6 +375,8 @@ void wxTextCtrl::OnChar(wxKeyEvent& event)
     bool eat_key = false ;
     long from, to;
 
+    printf("wxTextCtrl::OnChar - code: %d\n", key);
+
     if ( !IsEditable() &&
         !event.IsKeyInCategory(WXK_CATEGORY_ARROW | WXK_CATEGORY_TAB) &&
         !( (key == WXK_RETURN || key == WXK_NUMPAD_ENTER) &&
@@ -382,6 +384,7 @@ void wxTextCtrl::OnChar(wxKeyEvent& event)
 //        && key != WXK_PAGEUP && key != WXK_PAGEDOWN && key != WXK_HOME && key != WXK_END
         )
     {
+        printf("wxTextCtrl::OnChar - eat it\n");
         // eat it
         return ;
     }
@@ -413,6 +416,7 @@ void wxTextCtrl::OnChar(wxKeyEvent& event)
         case WXK_NUMPAD_ENTER:
             if (m_windowStyle & wxTE_PROCESS_ENTER)
             {
+                printf("wxTextCtrl::OnChar - process enter\n");
                 wxCommandEvent event(wxEVT_TEXT_ENTER, m_windowId);
                 event.SetEventObject( this );
                 event.SetString( GetValue() );
@@ -428,6 +432,7 @@ void wxTextCtrl::OnChar(wxKeyEvent& event)
                     wxButton *def = wxDynamicCast(tlw->GetDefaultItem(), wxButton);
                     if ( def && def->IsEnabled() )
                     {
+                        printf("wxTextCtrl::OnChar - process enter2\n");
                         wxCommandEvent event(wxEVT_BUTTON, def->GetId() );
                         event.SetEventObject(def);
                         def->Command(event);

@@ -16,15 +16,23 @@
 #include "wx/osx/private.h"
 
 #ifndef WX_PRECOMP
+    #include "wx/button.h"
+    #include "wx/toplevel.h"
 #endif
 
 typedef wxWindowWithItems<wxControl, wxComboBoxBase> RealwxComboBoxBase;
 
 wxBEGIN_EVENT_TABLE(wxComboBox, RealwxComboBoxBase)
+    EVT_CHAR(wxComboBox::OnChar)
     EVT_KEY_DOWN(wxComboBox::OnKeyDown)
 wxEND_EVENT_TABLE()
 
 // work in progress
+
+wxComboBox::wxComboBox()
+{
+    printf("wxComboBox: %p\n", this);
+}
 
 wxComboBox::~wxComboBox()
 {
@@ -54,6 +62,7 @@ bool wxComboBox::Create(wxWindow *parent, wxWindowID id,
            const wxValidator& validator,
            const wxString& name)
 {
+    printf("wxComboBox::Create: %p\n", this);
     DontCreatePeer();
     
     m_text = NULL;
@@ -240,8 +249,59 @@ void wxComboBox::Dismiss()
     GetComboPeer()->Dismiss();
 }
 
+void wxComboBox::OnChar(wxKeyEvent& event)
+{
+    const int key = event.GetKeyCode();
+    bool eat_key = false;
+
+    printf("wxComboBox::sssOnChar %p %d\n", this, key);
+
+    switch (key)
+    {
+        case WXK_RETURN:
+        case WXK_NUMPAD_ENTER:
+            if (m_windowStyle & wxTE_PROCESS_ENTER)
+            {
+                printf("wxComboBox::OnChar - process enter\n");
+                wxCommandEvent event(wxEVT_TEXT_ENTER, m_windowId);
+                event.SetEventObject(this);
+                event.SetString(GetValue());
+                if (HandleWindowEvent(event))
+                    return;
+            }
+            else
+            {
+                wxTopLevelWindow *tlw = wxDynamicCast(wxGetTopLevelParent(this), wxTopLevelWindow);
+                if (tlw && tlw->GetDefaultItem())
+                {
+                    wxButton *def = wxDynamicCast(tlw->GetDefaultItem(), wxButton);
+                    if (def && def->IsEnabled())
+                    {
+                        printf("wxComboBox::OnChar - process enter2\n");
+                        wxCommandEvent event(wxEVT_BUTTON, def->GetId());
+                        event.SetEventObject(def);
+                        def->Command(event);
+                        return;
+                    }
+                }
+
+                // this will make wxWidgets eat the ENTER key so that
+                // we actually prevent line wrapping in a single line text control
+                eat_key = true;
+            }
+            break;
+    }
+
+    if (!eat_key)
+    {
+        // perform keystroke handling
+        event.Skip(true);
+    }
+}
+
 void wxComboBox::OnKeyDown(wxKeyEvent& event)
 {
+    printf("wxComboBox::OnKeyDown %p %d\n", this, event.GetKeyCode());
     if (event.GetModifiers() == wxMOD_CONTROL)
     {
         switch(event.GetKeyCode())
